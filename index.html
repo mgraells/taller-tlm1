@@ -1,0 +1,373 @@
+<title>Taller TLM1</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2f5d4e">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: app de mòbil a una columna; capçalera fixa, navegació inferior amb 3 seccions, plaques de màquina com a targetes */
+:root{
+  --bg:#eef1ef; --surface:#ffffff; --surface-2:#e3e8e5; --line:#cfd6d2;
+  --fg:#18201c; --muted:#5b6862;
+  --machine:#2f5d4e;      /* verd màquina-eina */
+  --machine-ink:#ffffff;
+  --safety:#f2b705;       /* groc seguretat */
+  --ok:#2e8b57; --warn:#d99a00; --bad:#c8402f; --none:#9aa5a0;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121715; --surface:#1b221f; --surface-2:#242d29; --line:#33403a;
+  --fg:#e6ece9; --muted:#9aa9a2; --machine:#5f9c86; --machine-ink:#0d1311;
+  --safety:#f5c431; --ok:#4fbf85; --warn:#f0b429; --bad:#ef6b58; --none:#6c7a74; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121715; --surface:#1b221f; --surface-2:#242d29; --line:#33403a;
+  --fg:#e6ece9; --muted:#9aa9a2; --machine:#5f9c86; --machine-ink:#0d1311;
+  --safety:#f5c431; --ok:#4fbf85; --warn:#f0b429; --bad:#ef6b58; --none:#6c7a74; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.app{max-width:640px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--machine);color:var(--machine-ink);padding:12px 16px;display:flex;align-items:center;gap:12px}
+header .back{background:none;border:0;color:inherit;font-size:26px;line-height:1;padding:4px 8px 4px 0;cursor:pointer}
+header .back[hidden]{display:none}
+.brand{display:flex;flex-direction:column;min-width:0}
+.brand small{font-family:var(--mono);font-size:11px;letter-spacing:.08em;opacity:.8;text-transform:uppercase}
+.brand h1{margin:0;font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+main{flex:1;padding:16px 16px 96px;display:flex;flex-direction:column;gap:16px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);z-index:6}
+nav.tabs .in{max-width:640px;width:100%;display:grid;grid-template-columns:repeat(3,1fr)}
+nav.tabs button{background:none;border:0;padding:10px 4px 12px;font:600 13px var(--body);color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button[aria-current="page"]{color:var(--machine)}
+nav.tabs button[aria-current="page"]::after{content:"";width:28px;height:3px;border-radius:2px;background:var(--safety);margin-top:2px}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--safety);outline-offset:2px}
+.search{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:0 12px}
+.search input{flex:1;border:0;background:none;font:16px var(--body);color:var(--fg);padding:12px 0;min-width:0}
+.search input:focus{outline:none}
+.search svg{width:20px;height:20px;color:var(--muted);flex:none}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0 -6px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:10px;color:inherit;font:inherit;min-height:118px}
+.tile:hover{border-color:var(--machine)}
+.plate{font-family:var(--mono);font-size:13px;letter-spacing:.06em;background:var(--machine);color:var(--machine-ink);border-radius:4px;padding:3px 7px;align-self:flex-start;position:relative}
+.plate::before,.plate::after{content:"";position:absolute;top:50%;width:3px;height:3px;border-radius:50%;background:var(--machine-ink);opacity:.6;transform:translateY(-50%)}
+.plate::before{left:2px}.plate::after{right:2px}
+.tile h3{margin:0;font-family:var(--display);font-weight:600;font-size:22px;line-height:1.05}
+.tile .meta{font-size:13px;color:var(--muted);margin-top:auto;font-variant-numeric:tabular-nums}
+.list{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:14px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%}
+.row:last-child{border-bottom:0}
+.row:hover{background:var(--surface-2)}
+.row .txt{flex:1;min-width:0}
+.row .txt b{display:block;font-family:var(--display);font-weight:600;font-size:20px;line-height:1.1}
+.row .txt span{font-size:13px;color:var(--muted)}
+.chev{color:var(--muted);font-size:22px}
+.lights{display:flex;gap:3px;flex-wrap:wrap;max-width:110px;justify-content:flex-end}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--none);flex:none}
+.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
+.hero h2{margin:0;font-family:var(--display);font-weight:700;font-size:30px;line-height:1;text-wrap:balance}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--surface-2);color:var(--fg)}
+.tag.old{background:color-mix(in srgb,var(--safety) 30%,transparent)}
+.units{display:flex;gap:6px;flex-wrap:wrap}
+.unit{font-family:var(--mono);font-size:13px;display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:6px;padding:4px 8px;background:var(--bg)}
+.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.menu button{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 12px;font:600 16px var(--body);color:var(--fg);text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.menu button svg{width:26px;height:26px;color:var(--machine)}
+.menu button.wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px;background:var(--machine);color:var(--machine-ink);border-color:var(--machine)}
+.menu button.wide svg{color:var(--machine-ink)}
+.notice{border-left:4px solid var(--safety);background:var(--surface);padding:12px 14px;font-size:14px;color:var(--muted);border-radius:0 var(--r) var(--r) 0}
+details.sec{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+details.sec summary{list-style:none;cursor:pointer;padding:14px;display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:600;font-size:19px}
+details.sec summary::-webkit-details-marker{display:none}
+details.sec summary .n{font-family:var(--mono);font-size:12px;color:var(--machine-ink);background:var(--machine);border-radius:4px;padding:2px 6px;min-width:26px;text-align:center}
+details.sec summary .st{margin-left:auto;font:500 12px var(--body);color:var(--muted)}
+details.sec[open] summary{border-bottom:1px solid var(--line)}
+dl{margin:0;padding:4px 14px 10px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);column-gap:12px}
+dt,dd{padding:9px 0;border-bottom:1px dashed var(--line);margin:0;font-size:14px}
+dt{color:var(--muted)}
+dd{font-weight:500;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+dd.empty{color:var(--none);font-weight:400}
+dt:nth-last-child(2),dd:last-child{border-bottom:0}
+.empty-state{text-align:center;padding:32px 16px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty-state svg{width:44px;height:44px;color:var(--machine)}
+.empty-state h3{margin:0;color:var(--fg);font-family:var(--display);font-size:22px}
+.empty-state p{margin:0;max-width:34ch}
+.sync{font-size:12px;color:var(--muted);margin:-4px 0 0;font-family:var(--mono)}
+.photo{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--surface-2);max-width:100%}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.crit{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:6px;font:700 18px var(--display);color:#fff;background:var(--none)}
+.crit.cA{background:var(--bad)}.crit.cB{background:var(--warn);color:#1c1400}.crit.cC{background:var(--ok)}
+.desc{margin:0;color:var(--fg);max-width:65ch}
+.fotos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.fotos figure{margin:0;display:flex;flex-direction:column;gap:4px;min-width:0}
+.fotos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--surface-2)}
+.fotos figcaption{font-size:12px;color:var(--muted)}
+.nofoto span{display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;border:1px dashed var(--line);border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--muted);padding:6px;text-align:center;overflow-wrap:anywhere}
+details.sec h4{margin:12px 14px 0;font:600 13px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--machine)}
+details.sec[data-buit] summary{color:var(--muted)}
+.buit{margin:0;padding:12px 14px;color:var(--muted);font-size:14px}
+.recs{display:flex;flex-direction:column;gap:8px;padding:10px 14px 14px}
+.rec{border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.rec-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px}
+.rec-h b{font-weight:600;min-width:0}
+.rec dl{padding:0 12px 6px;border-top:1px dashed var(--line)}
+.pend{color:var(--warn);font-style:italic;font-weight:500}
+.na{color:var(--muted);font-weight:400}
+dl.plain{padding:0}
+.notes{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.notes li{display:flex;align-items:center;gap:6px}
+@media (prefers-reduced-motion:no-preference){main>*{animation:in .18s ease-out}@keyframes in{from{transform:translateY(4px)}to{transform:none}}}
+</style>
+
+<div class="app">
+  <header>
+    <button class="back" id="back" hidden aria-label="Enrere">‹</button>
+    <div class="brand"><small id="crumb">Escola del Treball · TLM1</small><h1 id="title">Taller TLM1</h1></div>
+  </header>
+  <main id="view"></main>
+  <nav class="tabs" aria-label="Seccions"><div class="in">
+    <button data-tab="maquines" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="9" width="18" height="10" rx="1.5"/><path d="M7 9V5h6v4M16 13h2M6 13h6"/></svg>Màquines</button>
+    <button data-tab="manteniment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>Manteniment</button>
+    <button data-tab="estoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10"/></svg>Estoc</button>
+  </div></nav>
+</div>
+
+<script>
+/* ---------- Dades: llista d'assignació TLM1 ---------- */
+const MAQ = [
+ [1,"Torn","Torn Pinacho S-90/200","Pinacho","S-90/200","15-28"],
+ [2,"Torn","Torn Pinacho A-75","Pinacho","A-75","2, 3, 4"],
+ [3,"Torn","Torn Microtor T-5","Microtor","T-5","5, 10"],
+ [4,"Torn","Torn CMZ","CMZ","","11, 12"],
+ [5,"Torn","Torn Zubal","Zubal","","13, 14"],
+ [6,"Torn","Torn Nordic 15","Nordic","15","6"],
+ [7,"Torn","Torn Pinacho Latino L1/200","Pinacho","Latino L1/200","7"],
+ [8,"Fresadora","Fresadora Waykor BC2000","Waykor","BC2000","38, 39, 41-43, 45"],
+ [9,"Fresadora","Fresadora Correa BC-2000","Correa","BC-2000","40"],
+ [10,"Fresadora (abans 1975)","Fresadora Lagun FVT-3","Lagun","FVT-3","33"],
+ [11,"Fresadora (abans 1975)","Fresadora Fexac UE","Fexac","UE","35, 36"],
+ [12,"Fresadora (abans 1975)","Fresadora Thiel duplex 158","Thiel","Duplex 158","34"],
+ [13,"Rectificadora","Rectificadora Kair T-650","Kair","T-650","47"],
+ [14,"Rectificadora","Rectificadora Kair T-500","Kair","T-500","49"],
+ [15,"Torn CNC","Torn CNC Pinacho SmartTurn 165","Pinacho","SmartTurn 165","65"],
+ [16,"Torn CNC","Torn CNC Emco PcTurn 125","Emco","PcTurn 125","84"],
+ [17,"Torn CNC","Torn CNC Alecop T8025B","Alecop","T8025B","91"],
+ [18,"Fresadora CNC","Fresadora CNC Haas TM1P","Haas","TM1P","72"],
+ [19,"Fresadora CNC","Fresadora CNC Alecop Supernova","Alecop","Supernova","70, 80"],
+ [20,"Trepant de columna","Trepant de columna Ibarmia S-32","Ibarmia","S-32","58"],
+ [21,"Trepant de columna","Trepant de columna ERLO TSA-32","ERLO","TSA-32","31"],
+ [22,"Serra de cinta","Serra de cinta MG K300 DI","MG","K300 DI","56"],
+ [23,"Premsa mecànica","Premsa mecànica Fenwich","Fenwich","","48"],
+ [24,"Premsa hidràulica","Premsa hidràulica 10 t","","10 t","82"],
+ [25,"Cisalla","Cisalla GK-6A","","GK-6A","52"],
+ [26,"Esmeriladora de banc","Esmeriladora Tomaso & Bonatti LTF T04S","Tomaso & Bonatti","LTF T04S","63"],
+ [27,"Impressora 3D","Impressora 3D BCN3D Sigma D25","BCN3D","Sigma D25","74, 76"],
+ [28,"Làser CO2","Làser CO2 Puri Laser","Puri Laser","","277"],
+].map(([n,tipus,nom,marca,model,codis])=>({n,tipus,nom,marca,model,codis,unitats:expand(codis),antiga:/1975/.test(tipus)}));
+
+const GRUPS = [
+ {id:"torns",nom:"Torns",placa:"TOR",tipus:["Torn"]},
+ {id:"fresadores",nom:"Fresadores",placa:"FRE",tipus:["Fresadora","Fresadora (abans 1975)"]},
+ {id:"cnc",nom:"CNC",placa:"CNC",tipus:["Torn CNC","Fresadora CNC"]},
+ {id:"rectificadores",nom:"Rectificadores",placa:"REC",tipus:["Rectificadora"]},
+ {id:"trepants",nom:"Trepants",placa:"TRE",tipus:["Trepant de columna"]},
+ {id:"serres",nom:"Serres",placa:"SER",tipus:["Serra de cinta"]},
+ {id:"conformacio",nom:"Premses i cisalles",placa:"CON",tipus:["Premsa mecànica","Premsa hidràulica","Cisalla"]},
+ {id:"esmeriladores",nom:"Esmeriladores",placa:"ESM",tipus:["Esmeriladora de banc"]},
+ {id:"digital",nom:"Fabricació digital",placa:"DIG",tipus:["Impressora 3D","Làser CO2"]},
+];
+
+/* ---------- Dades del Drive ----------
+   API_URL: adreça de l'script de Google (Implementa → Aplicació web). Buida = només la còpia inclosa. */
+const API_URL = "https://script.google.com/macros/s/AKfycbzrhY9aAPwWnZtKKj0e8rKnjCyzW_wnC4rx9cZwzntJo5ZGEG1lC8y7gPSKMaZB6hFl/exec";
+const SNAPSHOT = {"generat": "07/10/2026 10:47", "fitxes": {"22": {"fitxa": 22, "codis": "56", "nom": "Serra de cinta MG K300 DI", "fotos": {"general": "056_general.jpg", "placa": "056_placa.jpg"}, "pestanyes": [{"nom": "1-3 Identificació", "titol": "Identificació de l'equip", "blocs": [{"tipus": "apartat", "clau": "s1", "titol": "1. Codi de l'equip"}, {"tipus": "dades", "items": [{"clau": "codis", "etiqueta": "Codi del taller", "valor": "56"}, {"clau": "codi_sistema", "etiqueta": "Codi segons el sistema vist a classe", "valor": "01SC0301"}, {"clau": "codi_significat", "etiqueta": "Significat de cada part del codi", "valor": "01=Taller TLM1, SC=Serra de Cinta, 03=Zona 03 taller, 01=número de Serra Cinta"}]}, {"tipus": "apartat", "clau": "s2", "titol": "2. Nom i descripció"}, {"tipus": "dades", "items": [{"clau": "nom", "etiqueta": "Nom de l'equip (com sortirà a l'app)", "valor": "Serra de cinta MG K300 DI"}, {"clau": "grup", "etiqueta": "Grup", "valor": "Serra de cinta"}, {"clau": "foto_general", "etiqueta": "Nom del fitxer de la Foto general \nsegueix codificació: codi_general.jpg", "valor": "056_general.jpg"}, {"clau": "foto_placa", "etiqueta": "Nom del fitxer de la Foto placa\nsegueix codificació: codi_general.jpg", "valor": "056_placa.jpg"}]}, {"tipus": "dades", "items": [{"clau": "descripcio", "etiqueta": "Descripció (5-8 línies): per a què serveix, quines operacions fa i quins són els grups constructius principals", "valor": "La maquina ha sigut dissenyada i realitzada per tallar materials metàl·lics llargs com barres, tubs massisos, perfilats, etc. Els angles de tall que pot realitzar la màquina estan compresos entre: 0º i 60º. La màquina ha sigut dissenyada i realitzada per funcionar en ambient industrials, tancats i protegits contra l'acció d'agents atmosférics."}]}, {"tipus": "apartat", "clau": "s3", "titol": "3. Dades generals"}, {"tipus": "dades", "items": [{"clau": "marca", "etiqueta": "Marca (fabricant)", "valor": "Tronzadoras MG S.A"}, {"clau": "model", "etiqueta": "Model", "valor": "K 300 M"}, {"clau": "any_fabricacio", "etiqueta": "Any de fabricació", "valor": "2006"}, {"clau": "marcatge_ce", "etiqueta": "Marcatge CE", "valor": "Sí"}, {"clau": "tensio", "etiqueta": "Tensió d'alimentació (V)", "valor": "220"}, {"clau": "frequencia", "etiqueta": "Freqüència (Hz)", "valor": "50/60"}, {"clau": "potencia", "etiqueta": "Potència del motor principal (kW)", "valor": "0,736"}, {"clau": "altres_motors", "etiqueta": "Altres motors (kW)", "valor": "No aplica"}, {"clau": "dimensions", "etiqueta": "Llargada (mm)", "valor": "1400"}, {"clau": null, "etiqueta": "Amplada (mm)", "valor": "750"}, {"clau": null, "etiqueta": "Alçada (mm)", "valor": "1450"}, {"clau": "pes", "etiqueta": "Pes (kg)", "valor": "340"}]}, {"tipus": "taula", "clau": "unitats", "capcaleres": ["Codi taller", "Número de sèrie", "Ubicació en planta", "Observacions"], "files": [["56", "70107", "Pendent definir", "cap"]]}]}, {"nom": "4 Característiques", "titol": "4. Característiques principals segons grup", "blocs": [{"tipus": "apartat", "clau": "car_torn", "titol": "Torn convencional"}, {"tipus": "apartat", "clau": "car_fresadora", "titol": "Fresadora convencional"}, {"tipus": "apartat", "clau": "car_rectificadora", "titol": "Rectificadora"}, {"tipus": "apartat", "clau": "car_torn_cnc", "titol": "Torn CNC"}, {"tipus": "apartat", "clau": "car_fresadora_cnc", "titol": "Fresadora CNC"}, {"tipus": "apartat", "clau": "car_trepant", "titol": "Trepant de columna"}, {"tipus": "apartat", "clau": "car_serra", "titol": "Serra de cinta"}, {"tipus": "dades", "items": [{"clau": "cap_rodo_90", "etiqueta": "Capacitat de tall a 90°: rodó (mm)", "valor": "pendent"}, {"clau": "cap_rect_90", "etiqueta": "Capacitat de tall a 90°: rectangular (mm)", "valor": "pendent"}, {"clau": "cap_45", "etiqueta": "Capacitat de tall a 45° (mm)", "valor": "pendent"}, {"clau": "cinta", "etiqueta": "Dimensions de la cinta: llargada × amplada × gruix (mm)", "valor": "pendent"}, {"clau": "vel_cinta", "etiqueta": "Velocitats de la cinta (m/min)", "valor": "pendent"}, {"clau": "angle", "etiqueta": "Angles de tall possibles (graus)", "valor": "pendent"}, {"clau": "baixada", "etiqueta": "Baixada de l'arc", "valor": "pendent"}, {"clau": "mordassa", "etiqueta": "Tipus de mordassa", "valor": "pendent"}, {"clau": "refrigeracio", "etiqueta": "Refrigeració", "valor": "pendent"}]}, {"tipus": "apartat", "clau": "car_premsa_mec", "titol": "Premsa mecànica"}, {"tipus": "apartat", "clau": "car_premsa_hid", "titol": "Premsa hidràulica"}, {"tipus": "apartat", "clau": "car_cisalla", "titol": "Cisalla"}, {"tipus": "apartat", "clau": "car_esmeriladora", "titol": "Esmeriladora de banc"}, {"tipus": "apartat", "clau": "car_impressora3d", "titol": "Impressora 3D"}, {"tipus": "apartat", "clau": "car_laser", "titol": "Làser CO2"}]}, {"nom": "5 Valors de referència", "titol": "5. Valors de referència", "blocs": [{"tipus": "apartat", "clau": "s5", "titol": "Mesures"}, {"tipus": "taula", "clau": "valors_ref", "capcaleres": ["Magnitud", "Punt de mesura", "Valor de referència", "Unitat", "Font", "Data de mesura"], "files": [["Temperatura de funcionament", "Capçal o caixa de velocitats", "", "°C", "", ""], ["Temperatura de funcionament", "Motor principal (carcassa)", "", "°C", "", ""], ["Temperatura de l'oli", "Dipòsit de lubricació", "", "°C", "", ""], ["Vibració", "Rodament davanter de l'eix principal", "", "mm/s", "", ""], ["Vibració", "Rodament posterior de l'eix principal", "", "mm/s", "", ""], ["Vibració", "Motor principal", "", "mm/s", "", ""], ["Consum de corrent", "Fase L1", "", "A", "", ""], ["Consum de corrent", "Fase L2", "", "A", "", ""], ["Consum de corrent", "Fase L3", "", "A", "", ""], ["Soroll", "Lloc de l'operari", "", "dB(A)", "", ""], ["Altres a afegir aquí", "", "", "", "", ""], ["Altres a afegir aquí", "", "", "", "", ""]]}]}, {"nom": "6 Criticitat", "titol": "6. Anàlisi de criticitat", "blocs": [{"tipus": "apartat", "clau": "crit_ref", "titol": "Taula de referència"}, {"tipus": "apartat", "clau": "crit_eval", "titol": "Avaluació de l'equip"}, {"tipus": "taula", "clau": "criticitat", "capcaleres": ["Criteri", "Nivell (A / B / C)", "Justificació"], "files": [["Seguretat i medi ambient", "A", "Risc alt d'accident greu per a l'alumnat (elements en rotació, projeccions, atrapament, làser...)."], ["Producció", "B", "Si s'atura, les pràctiques es poden reorganitzar (una altra màquina semblant)"], ["Qualitat", "B", "Afecta la precisió de les peces, però es corregeix fàcilment"], ["Manteniment", "B", "Cost mitjà. Recanvis disponibles en un termini raonable."], ["CRITICITAT FINAL", "B", "Mitjana"]]}]}, {"nom": "7-9 Manteniment", "titol": "Manteniment recomanable, inspeccions i subcontractació", "blocs": [{"tipus": "apartat", "clau": "s7", "titol": "7. Manteniment recomanable"}, {"tipus": "taula", "clau": "manteniment_tipus", "capcaleres": ["Tipus de manteniment", "Aplica", "Justificació"], "files": [["Correctiu (reparar quan s'avaria)", "Sí", ""], ["Preventiu (tasques periòdiques programades)", "Sí", ""], ["Predictiu (seguiment de vibracions, temperatures, consums)", "Sí", ""], ["Legal (obligat per normativa)", "No", ""]]}, {"tipus": "apartat", "clau": "s8", "titol": "8. Inspeccions periódiques i manteniment legal (si hi ha)"}, {"tipus": "taula", "clau": "inspeccions", "capcaleres": ["Inspecció (Nom de la part a inspeccionar)", "Freqüència", "Qui la fa", "Procediment d'inspecció"], "files": [["", "Diària/ En cada ús", "Operari", ""]]}, {"tipus": "taula", "clau": "normativa", "capcaleres": ["Normativa", "Aplica", "Què exigeix per a aquest equip"], "files": [["RD 1215/1997, equips de treball", "", ""], ["RD 1644/2008, màquines (Directiva 2006/42/CE)", "", ""], ["REBT, RD 842/2002 (instal·lació elèctrica)", "", ""], ["Altres (equips a pressió, elevació...)", "", ""]]}]}, {"nom": "10-12 Recanvis", "titol": "Recanvis i consumibles", "blocs": [{"tipus": "apartat", "clau": "s10", "titol": "10. Recanvis crítics en estoc (si s'escau)"}, {"tipus": "taula", "clau": "recanvis_critics", "capcaleres": ["Recanvi", "Codi  de referència del fabricant", "Quantitat mínima", "Ubicació al magatzem", "Proveïdor", "Per què és crític"], "files": []}, {"tipus": "apartat", "clau": "s11", "titol": "11. Recanvis previstos en 5 anys (si s'escau)"}, {"tipus": "taula", "clau": "recanvis_5anys", "capcaleres": ["Recanvi", "Referència", "Quantitat", "Any previst (1-5)", "Cost unitari (€)", "Cost total (€)"], "files": []}, {"tipus": "apartat", "clau": "s12", "titol": "12. Consumibles"}, {"tipus": "taula", "clau": "consumibles", "capcaleres": ["Consumible", "Característiques", "On s'aplica", "Quantitat", "Unitat", "Freqüència de canvi"], "files": [["Oli del capçal o caixa de velocitats", "", "", "", "", ""], ["Oli de guies i bancada", "", "", "", "", ""], ["Greix", "", "", "", "", ""], ["Fluid de tall (taladrina)", "", "", "", "", ""], ["Filtres", "", "", "", "", ""]]}]}, {"nom": "13 Formació", "titol": "13. Accions formatives", "blocs": [{"tipus": "apartat", "clau": "s13", "titol": "Formació necessària"}, {"tipus": "taula", "clau": "formacio", "capcaleres": ["Formació", "Contingut", "Durada (h)", "Qui la imparteix"], "files": [["Funcionament de l'equip", "", "", ""], ["Prevenció de riscos", "", "", ""], ["Lubricació i manteniment bàsic", "", "", ""], ["Electricitat o control numèric (si escau)", "", "", ""]]}]}, {"nom": "Annex", "titol": "Annex. Accessoris i documentació", "blocs": [{"tipus": "apartat", "clau": "accessoris", "titol": "Accessoris i utillatge"}, {"tipus": "taula", "clau": "accessoris", "capcaleres": ["Accessori", "Quantitat", "On es guarda", "Observacions"], "files": []}, {"tipus": "apartat", "clau": "documentacio", "titol": "Documentació disponible"}, {"tipus": "taula", "clau": "documentacio", "capcaleres": ["Document", "Disponible", "Idioma", "Estat"], "files": [["Manual d'instruccions", "", "", ""], ["Esquema elèctric", "", "", ""], ["Llista de recanvis", "", "", ""], ["Certificat CE o d'adequació", "", "", ""]]}]}], "actualitzada": "07/10/2026"}}, "fotos": {}, "estat": {}, "errors": []};
+let DADES = {fitxes:{},fotos:{},estat:{}}, ESTAT = {}, ORIGEN = "inclosa";
+function aplica(d,origen){DADES=Object.assign({fitxes:{},fotos:{},estat:{}},d||{});ORIGEN=origen;ESTAT={};
+  Object.entries(DADES.estat||{}).forEach(([k,v])=>ESTAT[k]=v&&v.estat?v.estat:v)}
+aplica(SNAPSHOT,"inclosa");
+try{const c=JSON.parse(localStorage.getItem("taller_dades")||"null");if(c&&c.generat)aplica(c,"desada")}catch(e){}
+async function carrega(){
+  if(!API_URL)return;
+  try{const r=await fetch(API_URL,{cache:"no-store"});if(!r.ok)throw new Error(r.status);
+    const d=await r.json();aplica(d,"drive");try{localStorage.setItem("taller_dades",JSON.stringify(d))}catch(e){}
+    render();
+  }catch(e){ORIGEN=ORIGEN==="desada"?"desada-sense-connexio":ORIGEN;render()}
+}
+function fitxaDe(m){const f=DADES.fitxes||{};if(f[m.n])return f[m.n];
+  return Object.values(f).find(x=>expand(String(x.codis||"")).some(c=>m.unitats.includes(c)))||null}
+function fotoUrl(nom){if(!nom)return null;return (DADES.fotos||{})[String(nom).toLowerCase()]||null}
+
+/* ---------- Utilitats ---------- */
+function expand(s){const o=[];s.split(",").forEach(p=>{p=p.trim();if(p.includes("-")){const[a,b]=p.split("-").map(Number);for(let i=a;i<=b;i++)o.push(i)}else if(p)o.push(+p)});return o}
+const pad=c=>String(c).padStart(3,"0");
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dots=m=>`<span class="lights" aria-label="Estat de les unitats">${m.unitats.map(c=>`<span class="dot ${ESTAT[c]||""}" title="${pad(c)}"></span>`).join("")}</span>`;
+const grupDe=m=>GRUPS.find(g=>g.tipus.includes(m.tipus));
+const ICON={
+ fitxa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>',
+ mant:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>',
+ seg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M12 8v5M12 16v.5"/></svg>',
+ inc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3L2 20h20z"/><path d="M12 9v5M12 17v.5"/></svg>',
+ tasq:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>',
+ caixa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10"/></svg>',
+};
+
+/* ---------- Vistes ---------- */
+const $v=document.getElementById("view"), $t=document.getElementById("title"), $c=document.getElementById("crumb"), $b=document.getElementById("back");
+let stack=[], tab="maquines";
+
+function setHead(title,crumb,canBack){$t.textContent=title;$c.textContent=crumb;$b.hidden=!canBack}
+function go(view,arg,push=true){if(push)stack.push([view,arg]);window.scrollTo(0,0);render()}
+function render(){
+  const [view,arg]=stack[stack.length-1]||["home"];
+  ({home,grup,maquina,fitxa,proximament,manteniment,estoc})[view](arg);
+}
+function back(){if(stack.length>1){stack.pop();window.scrollTo(0,0);render()}}
+$b.onclick=back;
+
+function home(){
+  setHead("Taller TLM1","Escola del Treball · Fabricació mecànica",false);
+  const nUnitats=MAQ.reduce((s,m)=>s+m.unitats.length,0);
+  $v.innerHTML=`
+   <label class="search" for="q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+     <input id="q" type="search" placeholder="Cerca per model, marca o codi (p. ex. 47)" autocomplete="off"></label>
+   <div id="res" hidden></div>
+   <div id="grups">
+     <p class="eyebrow">${MAQ.length} models · ${nUnitats} màquines</p>
+     <div class="grid" style="margin-top:16px">${GRUPS.map(g=>{const ms=MAQ.filter(m=>g.tipus.includes(m.tipus));const u=ms.reduce((s,m)=>s+m.unitats.length,0);
+       return `<button class="tile" data-g="${g.id}"><span class="plate">${g.placa}</span><h3>${g.nom}</h3><span class="meta">${ms.length} ${ms.length==1?"model":"models"} · ${u} ${u==1?"màquina":"màquines"}</span></button>`}).join("")}</div>
+   </div>
+   <p class="sync">${ORIGEN==="drive"?"Dades del Drive · "+esc(DADES.generat||""):ORIGEN.startsWith("desada")?"Sense connexió · dades desades del "+esc(DADES.generat||""):"Còpia inclosa a l'app"+(DADES.generat?" · "+esc(DADES.generat):"")}</p>
+   <div class="legend"><span><i class="dot ok"></i>Operativa</span><span><i class="dot warn"></i>Amb incidència</span><span><i class="dot bad"></i>Fora de servei</span><span><i class="dot"></i>Sense informar</span></div>`;
+  $v.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>go("grup",b.dataset.g));
+  const q=$v.querySelector("#q"),res=$v.querySelector("#res"),gr=$v.querySelector("#grups");
+  q.oninput=()=>{const s=q.value.trim().toLowerCase();
+    if(!s){res.hidden=true;gr.hidden=false;return}
+    const hits=MAQ.filter(m=>(m.nom+" "+m.marca).toLowerCase().includes(s)||m.unitats.some(c=>String(c)===s.replace(/^0+/,"")));
+    gr.hidden=true;res.hidden=false;
+    res.innerHTML=hits.length?`<div class="list">${hits.map(rowHTML).join("")}</div>`:`<div class="empty-state"><h3>Cap màquina trobada</h3><p>Prova amb el model, la marca o el número d'inventari.</p></div>`;
+    bindRows(res)};
+}
+function rowHTML(m){return `<button class="row" data-m="${m.n}"><span class="txt"><b>${esc(m.nom)}</b><span>${m.unitats.length>1?m.unitats.length+" unitats · ":""}Codi ${esc(m.codis)}</span></span>${dots(m)}<span class="chev">›</span></button>`}
+function bindRows(el){el.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>go("maquina",+b.dataset.m))}
+
+function grup(id){
+  const g=GRUPS.find(x=>x.id===id),ms=MAQ.filter(m=>g.tipus.includes(m.tipus));
+  setHead(g.nom,"Màquines",true);
+  $v.innerHTML=`<div class="list">${ms.map(rowHTML).join("")}</div>`;
+  bindRows($v);
+}
+
+/* ---------- Lectura de la fitxa ---------- */
+const PEND=/^(pendent|no disponible)$/i;
+const OCULTS=new Set(["nom","grup","foto_general","foto_placa","descripcio"]);
+const COLS_DADA={valors_ref:[2],criticitat:[1,2],manteniment_tipus:[1,2],normativa:[1,2],documentacio:[1,2,3],consumibles:[1,2,3,4,5],formacio:[1,2,3]};
+function netejaEtiqueta(t){return String(t).split("\n")[0].replace(/\s*\((com sortirà[^)]*|5-8 línies[^)]*)\)\s*:?.*$/i,"").replace(/\s+$/,"")}
+function filaAmbDades(clau,fila){const cols=COLS_DADA[clau];
+  return cols?cols.some(i=>fila[i]&&!PEND.test(fila[i])):fila.slice(1).some(v=>v&&!PEND.test(v))||(!fila[0]&&fila.some(Boolean))}
+function itemTe(i){return i.valor!==""}
+function dadaFitxa(f,clau){for(const p of f.pestanyes)for(const b of p.blocs)if(b.tipus==="dades")for(const i of b.items)if(i.clau===clau)return i.valor;return ""}
+function critFinal(f){for(const p of f.pestanyes)for(const b of p.blocs)if(b.tipus==="taula"&&b.clau==="criticitat"){const r=b.files.find(x=>/final/i.test(x[0]));if(r)return {nivell:(r[1]||"").trim().toUpperCase(),just:r[2]||""}}return null}
+const valHTML=v=>PEND.test(v)?`<span class="pend">${esc(v)}</span>`:/^no aplica$/i.test(v)?`<span class="na">${esc(v)}</span>`:esc(v);
+const badge=l=>`<span class="crit c${esc(l)}" title="Criticitat ${esc(l)}">${esc(l)}</span>`;
+
+/* Converteix una pestanya en grups {títol, html}; descarta el que no té dades */
+function pestanyaHTML(p){
+  const grups=[];let cur={titol:"",parts:[],n:0};
+  const tanca=()=>{if(cur.parts.length)grups.push(cur)};
+  for(const b of p.blocs){
+    if(b.tipus==="apartat"){tanca();cur={titol:b.titol,parts:[],n:0};continue}
+    if(b.tipus==="dades"){const its=b.items.filter(i=>itemTe(i)&&!OCULTS.has(i.clau));
+      if(its.length){cur.parts.push(`<dl>${its.map(i=>`<dt>${esc(netejaEtiqueta(i.etiqueta))}</dt><dd>${valHTML(i.valor)}</dd>`).join("")}</dl>`);
+        cur.n+=its.filter(i=>!PEND.test(i.valor)).length}}
+    if(b.tipus==="taula"){const files=b.files.filter(f=>filaAmbDades(b.clau,f));
+      if(files.length){cur.n+=files.length;
+        cur.parts.push(`<div class="recs">${files.map(f=>{
+          const head=f[0]||"—";
+          const rest=b.capcaleres.map((h,i)=>[h,f[i]]).slice(1).filter(([,v])=>v);
+          const lvl=rest.find(([h])=>/^nivell/i.test(h));
+          return `<div class="rec"><div class="rec-h"><b>${esc(head)}</b>${lvl?badge(String(lvl[1]).trim().toUpperCase()):""}</div>
+            ${rest.filter(r=>r!==lvl).length?`<dl>${rest.filter(r=>r!==lvl).map(([h,v])=>`<dt>${esc(netejaEtiqueta(h))}</dt><dd>${valHTML(v)}</dd>`).join("")}</dl>`:""}</div>`}).join("")}</div>`)}}
+  }
+  tanca();
+  return grups;
+}
+
+function maquina(n){
+  const m=MAQ.find(x=>x.n===n),g=grupDe(m),f=fitxaDe(m);
+  const foto=f&&fotoUrl(f.fotos&&f.fotos.general), cf=f&&critFinal(f);
+  setHead(m.nom,g.nom,true);
+  $v.innerHTML=`
+   <section class="hero">
+     ${foto?`<img class="photo" src="${esc(foto)}" alt="Foto de ${esc(m.nom)}" loading="lazy">`:""}
+     <div class="hero-top"><span class="plate">${g.placa} · ${m.unitats.slice(0,4).map(pad).join(" / ")}${m.unitats.length>4?" …":""}</span>${cf&&cf.nivell?badge(cf.nivell):""}</div>
+     <h2>${esc(m.nom)}</h2>
+     <div class="tags">${m.marca?`<span class="tag">${esc(m.marca)}</span>`:""}${m.model?`<span class="tag">${esc(m.model)}</span>`:""}<span class="tag">${esc(m.tipus.replace(" (abans 1975)",""))}</span>${m.antiga?`<span class="tag old">Anterior a 1975</span>`:""}</div>
+     <div class="units">${m.unitats.map(c=>`<span class="unit"><i class="dot ${ESTAT[c]||""}"></i>${pad(c)}</span>`).join("")}</div>
+     ${notesEstat(m)}
+   </section>
+   <div class="menu">
+     <button class="wide" id="b-fitxa">${ICON.fitxa}<span>Fitxa de l'equip<br><small style="font-weight:500;opacity:.85">${f?"Revisada · "+esc(f.actualitzada||""):"Pendent de lliurar"}</small></span></button>
+     <button data-p="Manteniment de l'equip">${ICON.mant}Manteniment</button>
+     <button data-p="Normes de seguretat">${ICON.seg}Seguretat</button>
+     <button data-p="Registre d'incidències">${ICON.inc}Incidències</button>
+     <button data-p="Tasques de manteniment">${ICON.tasq}Tasques</button>
+   </div>`;
+  $v.querySelector("#b-fitxa").onclick=()=>go("fitxa",n);
+  $v.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>go("proximament",{m:n,t:b.dataset.p}));
+}
+function notesEstat(m){const ns=m.unitats.map(c=>[c,(DADES.estat||{})[c]]).filter(([,v])=>v&&v.nota);
+  return ns.length?`<ul class="notes">${ns.map(([c,v])=>`<li><i class="dot ${v.estat}"></i><b>${pad(c)}</b> ${esc(v.nota)}</li>`).join("")}</ul>`:""}
+
+function fitxa(n){
+  const m=MAQ.find(x=>x.n===n),f=fitxaDe(m);
+  setHead("Fitxa de l'equip",m.nom,true);
+  if(!f){$v.innerHTML=`<div class="notice">Aquesta fitxa encara no s'ha publicat. Quan la revisis i la desis a la carpeta <b>Fitxes revisades</b> del Drive, apareixerà aquí.</div>
+     <section class="hero"><h2>${esc(m.nom)}</h2><dl class="plain"><dt>Codis</dt><dd>${esc(m.codis)}</dd>${m.marca?`<dt>Marca</dt><dd>${esc(m.marca)}</dd>`:""}${m.model?`<dt>Model</dt><dd>${esc(m.model)}</dd>`:""}</dl></section>`;return}
+  const desc=dadaFitxa(f,"descripcio"),fg=f.fotos&&f.fotos.general,fp=f.fotos&&f.fotos.placa;
+  const fotos=[["Foto general",fg],["Placa de característiques",fp]].filter(([,nm])=>nm);
+  const blocs=f.pestanyes.map(p=>({p,g:pestanyaHTML(p)}));
+  $v.innerHTML=`
+   <section class="hero">
+     <p class="eyebrow" style="margin:0">Fitxa ${f.fitxa?String(f.fitxa).padStart(2,"0")+" · ":""}actualitzada ${esc(f.actualitzada||"")}</p>
+     <h2>${esc(f.nom||m.nom)}</h2>
+     ${desc?`<p class="desc">${esc(desc)}</p>`:""}
+     ${fotos.length?`<div class="fotos">${fotos.map(([t,nm])=>{const u=fotoUrl(nm);return u?`<figure><img src="${esc(u)}" alt="${t}" loading="lazy"><figcaption>${t}</figcaption></figure>`:`<figure class="nofoto"><span>${esc(nm)}</span><figcaption>${t} · es veurà quan es carregui del Drive</figcaption></figure>`}).join("")}</div>`:""}
+   </section>
+   ${blocs.map(({p,g},i)=>{const n2=g.reduce((s,x)=>s+x.n,0);
+     return `<details class="sec" ${i===0?"open":""} ${g.length?"":"data-buit"}><summary><span class="n">${esc((p.nom.match(/^[\dA-Za-z-]+/)||[""])[0].replace(/^Annex$/,"A"))}</span>${esc(p.titol.replace(/^\d+\.\s*/,""))}<span class="st">${g.length?(n2?n2+" dades":"Pendent"):"Pendent"}</span></summary>
+       ${g.length?g.map(x=>`${x.titol?`<h4>${esc(x.titol)}</h4>`:""}${x.parts.join("")}`).join(""):`<p class="buit">Encara sense dades.</p>`}
+     </details>`}).join("")}`;
+}
+
+function proximament({m,t}){
+  const mq=MAQ.find(x=>x.n===m);
+  setHead(t,mq.nom,true);
+  $v.innerHTML=`<div class="empty-state">${ICON.fitxa}<h3>${esc(t)}</h3><p>Aquest apartat es connectarà més endavant. De moment, la prioritat és la fitxa de l'equip.</p></div>`;
+}
+function manteniment(){setHead("Manteniment","Tot el taller",false);
+  $v.innerHTML=`<div class="empty-state">${ICON.mant}<h3>Cap tasca pendent</h3><p>Aquí sortiran les tasques de manteniment pendents de totes les màquines, quan es carregui el pla de manteniment.</p></div>`}
+function estoc(){setHead("Estoc","Recanvis i consumibles",false);
+  $v.innerHTML=`<div class="empty-state">${ICON.caixa}<h3>Estoc sense carregar</h3><p>Aquí es veuran els recanvis crítics i els consumibles de cada màquina, a partir dels apartats 10 a 12 de les fitxes.</p></div>`}
+
+/* Pestanyes */
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{
+  tab=b.dataset.tab;
+  document.querySelectorAll("nav.tabs button").forEach(x=>x===b?x.setAttribute("aria-current","page"):x.removeAttribute("aria-current"));
+  stack=[[tab==="maquines"?"home":tab]];render()});
+
+/* Enllaç directe des del QR: #m047 obre la màquina amb codi 47 */
+function fromHash(){const h=location.hash.match(/^#m0*(\d+)$/);if(!h)return false;
+  const c=+h[1],m=MAQ.find(x=>x.unitats.includes(c));if(!m)return false;
+  stack=[["home"],["maquina",m.n]];render();return true}
+if(!fromHash()){stack=[["home"]];render()}
+carrega();
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+window.addEventListener("hashchange",fromHash);
+</script>
