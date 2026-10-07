@@ -244,6 +244,7 @@ function home(){
        return `<button class="tile" data-g="${g.id}"><span class="plate">${g.placa}</span><h3>${g.nom}</h3><span class="meta">${ms.length} ${ms.length==1?"model":"models"} · ${u} ${u==1?"màquina":"màquines"}</span></button>`}).join("")}</div>
    </div>
    <p class="sync">${ORIGEN==="drive"?"Dades del Drive · "+esc(DADES.generat||""):ORIGEN.startsWith("desada")?"Sense connexió · dades desades del "+esc(DADES.generat||""):"Còpia inclosa a l'app"+(DADES.generat?" · "+esc(DADES.generat):"")}</p>
+   ${(DADES.errors||[]).length?`<div class="notice"><b>Avisos del Drive</b><br>${DADES.errors.map(esc).join("<br>")}</div>`:""}
    <div class="legend"><span><i class="dot ok"></i>Operativa</span><span><i class="dot warn"></i>Amb incidència</span><span><i class="dot bad"></i>Fora de servei</span><span><i class="dot"></i>Sense informar</span></div>`;
   $v.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>go("grup",b.dataset.g));
   const q=$v.querySelector("#q"),res=$v.querySelector("#res"),gr=$v.querySelector("#grups");
