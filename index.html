@@ -1,91 +1,98 @@
 <title>Taller TLM1</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2f5d4e">
+<meta name="theme-color" content="#ffffff">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400&display=swap">
 <style>
 /* Layout: app de mòbil a una columna; capçalera fixa, navegació inferior amb 3 seccions, plaques de màquina com a targetes */
 :root{
-  --bg:#eef1ef; --surface:#ffffff; --surface-2:#e3e8e5; --line:#cfd6d2;
-  --fg:#18201c; --muted:#5b6862;
-  --machine:#2f5d4e;      /* verd màquina-eina */
-  --machine-ink:#ffffff;
-  --safety:#f2b705;       /* groc seguretat */
-  --ok:#2e8b57; --warn:#d99a00; --bad:#c8402f; --none:#9aa5a0;
-  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
-  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --r:10px;
+  /* Colors de la web de l'Escola del Treball */
+  --bordeus:#922136; --ocre:#ab6117; --blau:#1e3695;
+  --bg:#ffffff; --surface:#ffffff; --surface-2:#f2f2f2; --line:#dcdcdc;
+  --fg:#111111; --muted:#5a5a5a;
+  --machine:var(--blau); --machine-ink:#ffffff;
+  --safety:var(--bordeus);
+  --ok:#2e8b57; --warn:#d99a00; --bad:#c8402f; --none:#a3a3a3;
+  --display:"Roboto",Arial,sans-serif;
+  --body:"Roboto",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Roboto",system-ui,sans-serif;
+  --r:6px; color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#121715; --surface:#1b221f; --surface-2:#242d29; --line:#33403a;
-  --fg:#e6ece9; --muted:#9aa9a2; --machine:#5f9c86; --machine-ink:#0d1311;
-  --safety:#f5c431; --ok:#4fbf85; --warn:#f0b429; --bad:#ef6b58; --none:#6c7a74; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#121715; --surface:#1b221f; --surface-2:#242d29; --line:#33403a;
-  --fg:#e6ece9; --muted:#9aa9a2; --machine:#5f9c86; --machine-ink:#0d1311;
-  --safety:#f5c431; --ok:#4fbf85; --warn:#f0b429; --bad:#ef6b58; --none:#6c7a74; color-scheme:dark}
 html,body{height:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
 .app{max-width:640px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--machine);color:var(--machine-ink);padding:12px 16px;display:flex;align-items:center;gap:12px}
-header .back{background:none;border:0;color:inherit;font-size:26px;line-height:1;padding:4px 8px 4px 0;cursor:pointer}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:#fff;color:var(--fg);padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}
+header .back{background:none;border:0;color:inherit;font-size:30px;line-height:1;padding:2px 10px 6px 0;cursor:pointer;border-right:1px solid var(--line);margin-right:4px}
 header .back[hidden]{display:none}
-.brand{display:flex;flex-direction:column;min-width:0}
-.brand small{font-family:var(--mono);font-size:11px;letter-spacing:.08em;opacity:.8;text-transform:uppercase}
-.brand h1{margin:0;font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-main{flex:1;padding:16px 16px 96px;display:flex;flex-direction:column;gap:16px}
+.brand{display:flex;flex-direction:column;gap:6px;min-width:0;padding:18px 16px 2px}
+.brand small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;color:var(--muted)}
+.brand small b{color:var(--fg);font-weight:700}
+.brand h1{margin:0;font-family:var(--display);font-weight:700;font-size:32px;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+main{flex:1;padding:14px 16px 96px;display:flex;flex-direction:column;gap:16px}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);z-index:6}
 nav.tabs .in{max-width:640px;width:100%;display:grid;grid-template-columns:repeat(3,1fr)}
 nav.tabs button{background:none;border:0;padding:10px 4px 12px;font:600 13px var(--body);color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
 nav.tabs button svg{width:24px;height:24px}
 nav.tabs button[aria-current="page"]{color:var(--machine)}
-nav.tabs button[aria-current="page"]::after{content:"";width:28px;height:3px;border-radius:2px;background:var(--safety);margin-top:2px}
+nav.tabs button[aria-current="page"]::after{content:"";width:28px;height:3px;border-radius:2px;background:var(--bordeus);margin-top:2px}
+nav.tabs button{font-weight:500!important}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--safety);outline-offset:2px}
 .search{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:0 12px}
 .search input{flex:1;border:0;background:none;font:16px var(--body);color:var(--fg);padding:12px 0;min-width:0}
 .search input:focus{outline:none}
 .search svg{width:20px;height:20px;color:var(--muted);flex:none}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0 -6px}
+.eyebrow{font-size:13px;font-weight:500;color:var(--muted);margin:4px 0 -6px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:10px;color:inherit;font:inherit;min-height:118px}
-.tile:hover{border-color:var(--machine)}
+.tile{background:var(--c,var(--blau));border:0;border-radius:var(--r);padding:0;overflow:hidden;text-align:center;cursor:pointer;display:flex;flex-direction:column;color:#fff;font:inherit;transition:filter .15s}
+.tile:hover{filter:brightness(1.1)}
+.tile .illus{display:block;aspect-ratio:16/10;padding:16px 14px 0}
+.illus svg{display:block;width:100%;height:100%;fill:none;stroke:#fff;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.illus .f{fill:rgba(255,255,255,.16)}
+.illus .a{fill:#fff}
+.illus .sp{stroke:#fff;stroke-width:2.2}
+.illus .g{stroke:rgba(255,255,255,.45);stroke-width:2}
+.tile .tx{display:flex;flex-direction:column;gap:4px;padding:8px 10px 16px;flex:1;align-items:center}
+.logo{height:44px;width:auto;object-fit:contain;flex:none}
 .plate{font-family:var(--mono);font-size:13px;letter-spacing:.06em;background:var(--machine);color:var(--machine-ink);border-radius:4px;padding:3px 7px;align-self:flex-start;position:relative}
 .plate::before,.plate::after{content:"";position:absolute;top:50%;width:3px;height:3px;border-radius:50%;background:var(--machine-ink);opacity:.6;transform:translateY(-50%)}
 .plate::before{left:2px}.plate::after{right:2px}
-.tile h3{margin:0;font-family:var(--display);font-weight:600;font-size:22px;line-height:1.05}
-.tile .meta{font-size:13px;color:var(--muted);margin-top:auto;font-variant-numeric:tabular-nums}
+.tile h3{margin:0;font-family:var(--display);font-weight:700;font-size:21px;line-height:1.1}
+.tile .meta{font-size:13px;color:rgba(255,255,255,.85);margin-top:auto;font-variant-numeric:tabular-nums}
 .list{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .row{display:flex;align-items:center;gap:12px;padding:14px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%}
 .row:last-child{border-bottom:0}
 .row:hover{background:var(--surface-2)}
 .row .txt{flex:1;min-width:0}
-.row .txt b{display:block;font-family:var(--display);font-weight:600;font-size:20px;line-height:1.1}
+.row .txt b{display:block;font-family:var(--display);font-weight:700;font-size:19px;line-height:1.15}
 .row .txt span{font-size:13px;color:var(--muted)}
 .chev{color:var(--muted);font-size:22px}
-.lights{display:flex;gap:3px;flex-wrap:wrap;max-width:110px;justify-content:flex-end}
+.lights{display:flex;gap:4px;flex-wrap:wrap;max-width:124px;justify-content:flex-end}
+.lights .dot{width:20px;height:20px}
 .dot{width:10px;height:10px;border-radius:50%;background:var(--none);flex:none}
 .dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}.dot.bad{background:var(--bad)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .legend span{display:flex;align-items:center;gap:6px}
+.legend .dot{width:16px;height:16px}
+.row .txt span b.codi{display:inline;font:700 14px var(--body);color:var(--fg);font-variant-numeric:tabular-nums}
 .hero{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
 .hero h2{margin:0;font-family:var(--display);font-weight:700;font-size:30px;line-height:1;text-wrap:balance}
 .tags{display:flex;gap:8px;flex-wrap:wrap}
 .tag{font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--surface-2);color:var(--fg)}
 .tag.old{background:color-mix(in srgb,var(--safety) 30%,transparent)}
 .units{display:flex;gap:6px;flex-wrap:wrap}
-.unit{font-family:var(--mono);font-size:13px;display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:6px;padding:4px 8px;background:var(--bg)}
-.menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.menu button{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 12px;font:600 16px var(--body);color:var(--fg);text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.unit{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;font-size:15px;display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:6px 10px 6px 7px;background:var(--bg)}
+.unit .dot{width:20px;height:20px}
+.menu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.menu button{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 12px;font:700 16px var(--body);color:var(--fg);text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px}
 .menu button svg{width:26px;height:26px;color:var(--machine)}
 .menu button.wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px;background:var(--machine);color:var(--machine-ink);border-color:var(--machine)}
 .menu button.wide svg{color:var(--machine-ink)}
 .notice{border-left:4px solid var(--safety);background:var(--surface);padding:12px 14px;font-size:14px;color:var(--muted);border-radius:0 var(--r) var(--r) 0}
 details.sec{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-details.sec summary{list-style:none;cursor:pointer;padding:14px;display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:600;font-size:19px}
+details.sec summary{list-style:none;cursor:pointer;padding:14px;display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:18px}
 details.sec summary::-webkit-details-marker{display:none}
-details.sec summary .n{font-family:var(--mono);font-size:12px;color:var(--machine-ink);background:var(--machine);border-radius:4px;padding:2px 6px;min-width:26px;text-align:center}
+details.sec summary .n{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--machine-ink);background:var(--machine);border-radius:4px;padding:2px 6px;min-width:26px;text-align:center}
 details.sec summary .st{margin-left:auto;font:500 12px var(--body);color:var(--muted)}
 details.sec[open] summary{border-bottom:1px solid var(--line)}
 dl{margin:0;padding:4px 14px 10px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);column-gap:12px}
@@ -98,9 +105,23 @@ dt:nth-last-child(2),dd:last-child{border-bottom:0}
 .empty-state svg{width:44px;height:44px;color:var(--machine)}
 .empty-state h3{margin:0;color:var(--fg);font-family:var(--display);font-size:22px}
 .empty-state p{margin:0;max-width:34ch}
-.sync{font-size:12px;color:var(--muted);margin:-4px 0 0;font-family:var(--mono)}
+.sync{font-size:12px;color:var(--muted);margin:-4px 0 0}
 .photo{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--surface-2);max-width:100%}
 .hero-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hero-main{display:flex;flex-direction:row-reverse;gap:14px;align-items:center}
+.hero-img{flex:none;width:42%;max-width:220px;aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;background:var(--surface-2)}
+.hero-img img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-img .illus{display:block;width:100%;height:100%;background:var(--c,var(--blau));padding:10px 8px 2px}
+.hero-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.hero-info h2{font-size:26px}
+.hero-info h2 .model{display:block;font-weight:400;font-style:italic;font-size:22px;margin-top:6px;font-family:var(--body)}
+.legend{margin-top:auto;padding-top:8px}
+.crit-l{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.menu button.wide2{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px;background:var(--bordeus);border-color:var(--bordeus);color:#fff}
+.menu button.wide2 svg{color:#fff}
+.menu button:not(.wide):not(.wide2){font-size:14px;padding:14px 4px;align-items:center;text-align:center;min-width:0}
+.menu button.wide2 small{font-weight:400;color:rgba(255,255,255,.85);font-size:13px}
+.illus{box-sizing:border-box}
 .crit{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 6px;border-radius:6px;font:700 18px var(--display);color:#fff;background:var(--none)}
 .crit.cA{background:var(--bad)}.crit.cB{background:var(--warn);color:#1c1400}.crit.cC{background:var(--ok)}
 .desc{margin:0;color:var(--fg);max-width:65ch}
@@ -109,7 +130,7 @@ dt:nth-last-child(2),dd:last-child{border-bottom:0}
 .fotos img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--surface-2)}
 .fotos figcaption{font-size:12px;color:var(--muted)}
 .nofoto span{display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;border:1px dashed var(--line);border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--muted);padding:6px;text-align:center;overflow-wrap:anywhere}
-details.sec h4{margin:12px 14px 0;font:600 13px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--machine)}
+details.sec h4{margin:16px 14px 4px;padding:10px 12px;font:700 17px var(--display);letter-spacing:.03em;text-transform:uppercase;color:var(--fg);background:var(--surface-2);border-left:5px solid var(--bordeus);border-radius:0 var(--r) var(--r) 0}
 details.sec[data-buit] summary{color:var(--muted)}
 .buit{margin:0;padding:12px 14px;color:var(--muted);font-size:14px}
 .recs{display:flex;flex-direction:column;gap:8px;padding:10px 14px 14px}
@@ -128,8 +149,9 @@ dl.plain{padding:0}
 <div class="app">
   <header>
     <button class="back" id="back" hidden aria-label="Enrere">‹</button>
-    <div class="brand"><small id="crumb">Escola del Treball · TLM1</small><h1 id="title">Taller TLM1</h1></div>
+    <img class="logo" id="logo" src="logo-edt.png" alt="Institut Escola del Treball de Barcelona" onerror="this.remove()">
   </header>
+  <div class="brand"><small id="crumb">Fabricació mecànica</small><h1 id="title">Taller TLM1</h1></div>
   <main id="view"></main>
   <nav class="tabs" aria-label="Seccions"><div class="in">
     <button data-tab="maquines" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="9" width="18" height="10" rx="1.5"/><path d="M7 9V5h6v4M16 13h2M6 13h6"/></svg>Màquines</button>
@@ -177,11 +199,25 @@ const GRUPS = [
  {id:"cnc",nom:"CNC",placa:"CNC",tipus:["Torn CNC","Fresadora CNC"]},
  {id:"rectificadores",nom:"Rectificadores",placa:"REC",tipus:["Rectificadora"]},
  {id:"trepants",nom:"Trepants",placa:"TRE",tipus:["Trepant de columna"]},
- {id:"serres",nom:"Serres",placa:"SER",tipus:["Serra de cinta"]},
+ {id:"serres",nom:"Serres i esmeriladores",placa:"SER/ESM",tipus:["Serra de cinta","Esmeriladora de banc"]},
  {id:"conformacio",nom:"Premses i cisalles",placa:"CON",tipus:["Premsa mecànica","Premsa hidràulica","Cisalla"]},
- {id:"esmeriladores",nom:"Esmeriladores",placa:"ESM",tipus:["Esmeriladora de banc"]},
  {id:"digital",nom:"Fabricació digital",placa:"DIG",tipus:["Impressora 3D","Làser CO2"]},
 ];
+
+/* Il·lustració representativa de cada grup (dibuix propi). Classes: f=farciment suau, a=accent groc, sp=espurnes, g=terra */
+const IL = {
+ torns:`<path class="g" d="M6 89h148"/><rect class="f" x="20" y="60" width="22" height="28"/><rect class="f" x="118" y="60" width="22" height="28"/><rect x="14" y="50" width="132" height="10"/><rect class="f" x="14" y="22" width="36" height="28" rx="2"/><rect x="50" y="28" width="8" height="18"/><rect class="a" x="58" y="34" width="52" height="8"/><rect class="f" x="112" y="30" width="20" height="20" rx="2"/><path d="M106 38h6"/><rect x="72" y="44" width="22" height="6"/><path d="M80 44v-2h6v2"/><circle cx="24" cy="36" r="4"/><circle cx="38" cy="36" r="4"/>`,
+ fresadores:`<path class="g" d="M6 89h148"/><rect class="f" x="26" y="10" width="30" height="78" rx="2"/><rect x="40" y="14" width="74" height="14" rx="2"/><rect class="f" x="92" y="28" width="20" height="18" rx="2"/><path d="M102 46v6"/><rect class="a" x="98" y="52" width="8" height="7"/><rect x="56" y="62" width="88" height="6"/><rect class="f" x="56" y="68" width="40" height="20"/><circle cx="148" cy="65" r="4"/><rect class="f" x="80" y="58" width="40" height="4"/>`,
+ cnc:`<path class="g" d="M6 89h148"/><rect class="f" x="14" y="18" width="106" height="70" rx="4"/><rect x="26" y="28" width="58" height="38" rx="2"/><path d="M55 28v12"/><rect class="a" x="51" y="40" width="8" height="8"/><path d="M34 60h42"/><path d="M96 40v14"/><rect class="f" x="124" y="26" width="26" height="42" rx="2"/><rect x="128" y="30" width="18" height="12" rx="1"/><circle cx="132" cy="52" r="2.5"/><circle cx="142" cy="52" r="2.5"/><circle cx="132" cy="61" r="2.5"/><circle cx="142" cy="61" r="2.5"/><rect class="a" x="102" y="7" width="7" height="11" rx="2"/>`,
+ rectificadores:`<path class="g" d="M6 89h148"/><rect class="f" x="12" y="58" width="112" height="30" rx="2"/><rect x="20" y="50" width="96" height="8"/><rect class="a" x="44" y="44" width="40" height="6"/><rect class="f" x="122" y="12" width="24" height="76" rx="2"/><rect x="74" y="16" width="50" height="10" rx="2"/><path class="f" d="M70 40a16 16 0 0 1 32 0z"/><circle cx="86" cy="40" r="11"/><circle cx="86" cy="40" r="3"/><path class="sp" d="M70 48l-8 4M72 52l-6 8M78 52l-2 8"/><circle cx="20" cy="73" r="5"/>`,
+ trepants:`<path class="g" d="M6 89h148"/><rect class="f" x="46" y="80" width="68" height="8" rx="2"/><rect class="f" x="54" y="12" width="10" height="68"/><rect class="f" x="46" y="12" width="70" height="24" rx="3"/><rect x="58" y="4" width="26" height="8" rx="2"/><path d="M100 36v12"/><path class="a" d="M98 48h4l-1 12h-2z"/><rect x="64" y="64" width="52" height="5"/><path d="M116 26l18 12"/><circle cx="136" cy="40" r="4"/><circle cx="116" cy="26" r="3"/>`,
+ serres:`<path class="g" d="M6 89h148"/><rect class="f" x="10" y="60" width="66" height="28" rx="2"/><rect x="8" y="28" width="74" height="22" rx="11"/><path d="M20 50h50"/><rect x="28" y="50" width="10" height="10"/><rect class="a" x="2" y="52" width="82" height="6"/><path d="M124 58v30M112 88h24"/><rect class="f" x="110" y="38" width="28" height="18" rx="6"/><circle class="f" cx="100" cy="47" r="10"/><circle class="f" cx="148" cy="47" r="10"/><path class="sp" d="M96 60l-4 8M101 60l1 9M106 59l5 7"/>`,
+ conformacio:`<path class="g" d="M6 89h148"/><rect class="f" x="24" y="8" width="112" height="18" rx="2"/><rect class="f" x="24" y="72" width="112" height="16" rx="2"/><rect x="30" y="26" width="10" height="46"/><rect x="120" y="26" width="10" height="46"/><rect class="f" x="68" y="26" width="24" height="14"/><rect x="75" y="40" width="10" height="12"/><rect x="54" y="52" width="52" height="6"/><rect class="a" x="58" y="64" width="44" height="8"/>`,
+ digital:`<path class="g" d="M6 89h148"/><rect class="f" x="30" y="10" width="94" height="78" rx="4"/><rect x="40" y="20" width="74" height="58" rx="2"/><path d="M40 32h74"/><rect x="68" y="28" width="16" height="10" rx="1"/><path d="M73 38l3 5 3-5"/><rect class="a" x="66" y="56" width="20" height="16"/><path d="M66 62h20M66 67h20"/><path d="M48 72h58"/><circle cx="142" cy="28" r="10"/><circle cx="142" cy="28" r="3"/><path d="M142 38c0 16-30 0-58-6" stroke-dasharray="3 3"/>`,
+};
+const COLORS=["var(--bordeus)","var(--ocre)","var(--blau)"];
+const colorG=id=>COLORS[GRUPS.findIndex(g=>g.id===id)%3];
+const ilus=id=>`<svg viewBox="0 0 160 96" aria-hidden="true">${IL[id]||""}</svg>`;
 
 /* ---------- Dades del Drive ----------
    API_URL: adreça de l'script de Google (Implementa → Aplicació web). Buida = només la còpia inclosa. */
@@ -232,7 +268,7 @@ function back(){if(stack.length>1){stack.pop();window.scrollTo(0,0);render()}}
 $b.onclick=back;
 
 function home(){
-  setHead("Taller TLM1","Escola del Treball · Fabricació mecànica",false);
+  setHead("Taller TLM1","Fabricació mecànica",false);
   const nUnitats=MAQ.reduce((s,m)=>s+m.unitats.length,0);
   $v.innerHTML=`
    <label class="search" for="q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
@@ -241,11 +277,11 @@ function home(){
    <div id="grups">
      <p class="eyebrow">${MAQ.length} models · ${nUnitats} màquines</p>
      <div class="grid" style="margin-top:16px">${GRUPS.map(g=>{const ms=MAQ.filter(m=>g.tipus.includes(m.tipus));const u=ms.reduce((s,m)=>s+m.unitats.length,0);
-       return `<button class="tile" data-g="${g.id}"><span class="plate">${g.placa}</span><h3>${g.nom}</h3><span class="meta">${ms.length} ${ms.length==1?"model":"models"} · ${u} ${u==1?"màquina":"màquines"}</span></button>`}).join("")}</div>
+       return `<button class="tile" data-g="${g.id}" style="--c:${colorG(g.id)}"><span class="illus">${ilus(g.id)}</span><span class="tx"><h3>${g.nom}</h3><span class="meta">${ms.length} ${ms.length==1?"model":"models"} · ${u} ${u==1?"màquina":"màquines"}</span></span></button>`}).join("")}</div>
    </div>
    <p class="sync">${ORIGEN==="drive"?"Dades del Drive · "+esc(DADES.generat||""):ORIGEN.startsWith("desada")?"Sense connexió · dades desades del "+esc(DADES.generat||""):"Còpia inclosa a l'app"+(DADES.generat?" · "+esc(DADES.generat):"")}</p>
    ${(DADES.errors||[]).length?`<div class="notice"><b>Avisos del Drive</b><br>${DADES.errors.map(esc).join("<br>")}</div>`:""}
-   <div class="legend"><span><i class="dot ok"></i>Operativa</span><span><i class="dot warn"></i>Amb incidència</span><span><i class="dot bad"></i>Fora de servei</span><span><i class="dot"></i>Sense informar</span></div>`;
+   ${LLEGENDA}`;
   $v.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>go("grup",b.dataset.g));
   const q=$v.querySelector("#q"),res=$v.querySelector("#res"),gr=$v.querySelector("#grups");
   q.oninput=()=>{const s=q.value.trim().toLowerCase();
@@ -255,13 +291,18 @@ function home(){
     res.innerHTML=hits.length?`<div class="list">${hits.map(rowHTML).join("")}</div>`:`<div class="empty-state"><h3>Cap màquina trobada</h3><p>Prova amb el model, la marca o el número d'inventari.</p></div>`;
     bindRows(res)};
 }
-function rowHTML(m){return `<button class="row" data-m="${m.n}"><span class="txt"><b>${esc(m.nom)}</b><span>${m.unitats.length>1?m.unitats.length+" unitats · ":""}Codi ${esc(m.codis)}</span></span>${dots(m)}<span class="chev">›</span></button>`}
+const llistaCodis=u=>u.length>1?u.slice(0,-1).join(", ")+" i "+u[u.length-1]:String(u[0]??"");
+function nomDividit(m){const r=[m.marca,m.model].filter(Boolean).join(" ");
+  const base=r&&m.nom.toLowerCase().endsWith(r.toLowerCase())?m.nom.slice(0,-r.length).trim():"";
+  return base?`${esc(base)}<span class="model">${esc(r)}</span>`:esc(m.nom)}
+const LLEGENDA=`<div class="legend"><span><i class="dot ok"></i>Operativa</span><span><i class="dot warn"></i>Amb incidència</span><span><i class="dot bad"></i>Fora de servei</span><span><i class="dot"></i>Sense informar</span></div>`;
+function rowHTML(m){return `<button class="row" data-m="${m.n}"><span class="txt"><b>${esc(m.nom)}</b><span>${m.unitats.length>1?`Codi (${m.unitats.length} unitats)`:"Codi"}: <b class="codi">${llistaCodis(m.unitats)}</b></span></span>${dots(m)}<span class="chev">›</span></button>`}
 function bindRows(el){el.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>go("maquina",+b.dataset.m))}
 
 function grup(id){
   const g=GRUPS.find(x=>x.id===id),ms=MAQ.filter(m=>g.tipus.includes(m.tipus));
   setHead(g.nom,"Màquines",true);
-  $v.innerHTML=`<div class="list">${ms.map(rowHTML).join("")}</div>`;
+  $v.innerHTML=`<div class="list">${ms.map(rowHTML).join("")}</div>${LLEGENDA}`;
   bindRows($v);
 }
 
@@ -303,23 +344,28 @@ function pestanyaHTML(p){
 function maquina(n){
   const m=MAQ.find(x=>x.n===n),g=grupDe(m),f=fitxaDe(m);
   const foto=f&&fotoUrl(f.fotos&&f.fotos.general), cf=f&&critFinal(f);
-  setHead(m.nom,g.nom,true);
+  setHead(g.nom,"Màquines",true);
   $v.innerHTML=`
    <section class="hero">
-     ${foto?`<img class="photo" src="${esc(foto)}" alt="Foto de ${esc(m.nom)}" loading="lazy">`:""}
-     <div class="hero-top"><span class="plate">${g.placa} · ${m.unitats.slice(0,4).map(pad).join(" / ")}${m.unitats.length>4?" …":""}</span>${cf&&cf.nivell?badge(cf.nivell):""}</div>
-     <h2>${esc(m.nom)}</h2>
-     <div class="tags">${m.marca?`<span class="tag">${esc(m.marca)}</span>`:""}${m.model?`<span class="tag">${esc(m.model)}</span>`:""}<span class="tag">${esc(m.tipus.replace(" (abans 1975)",""))}</span>${m.antiga?`<span class="tag old">Anterior a 1975</span>`:""}</div>
+     <div class="hero-main">
+       <div class="hero-img" style="--c:${colorG(g.id)}">${foto?`<img src="${esc(foto)}" alt="Foto de ${esc(m.nom)}" loading="lazy">`:`<span class="illus">${ilus(g.id)}</span>`}</div>
+       <div class="hero-info">
+         <h2>${nomDividit(m)}</h2>
+         ${cf&&cf.nivell?`<span class="crit-l">${badge(cf.nivell)}Criticitat</span>`:""}
+       </div>
+     </div>
+     ${m.antiga?`<div class="tags"><span class="tag old">Anterior a 1975</span></div>`:""}
      <div class="units">${m.unitats.map(c=>`<span class="unit"><i class="dot ${ESTAT[c]||""}"></i>${pad(c)}</span>`).join("")}</div>
      ${notesEstat(m)}
    </section>
    <div class="menu">
      <button class="wide" id="b-fitxa">${ICON.fitxa}<span>Fitxa de l'equip<br><small style="font-weight:500;opacity:.85">${f?"Revisada · "+esc(f.actualitzada||""):"Pendent de lliurar"}</small></span></button>
+     <button data-p="Tasques programades" class="wide2">${ICON.tasq}<span>Tasques programades<br><small>Registre per data: qui les fa i temps invertit</small></span></button>
      <button data-p="Manteniment de l'equip">${ICON.mant}Manteniment</button>
      <button data-p="Normes de seguretat">${ICON.seg}Seguretat</button>
      <button data-p="Registre d'incidències">${ICON.inc}Incidències</button>
-     <button data-p="Tasques de manteniment">${ICON.tasq}Tasques</button>
-   </div>`;
+   </div>
+   ${LLEGENDA}`;
   $v.querySelector("#b-fitxa").onclick=()=>go("fitxa",n);
   $v.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>go("proximament",{m:n,t:b.dataset.p}));
 }
@@ -333,7 +379,8 @@ function fitxa(n){
      <section class="hero"><h2>${esc(m.nom)}</h2><dl class="plain"><dt>Codis</dt><dd>${esc(m.codis)}</dd>${m.marca?`<dt>Marca</dt><dd>${esc(m.marca)}</dd>`:""}${m.model?`<dt>Model</dt><dd>${esc(m.model)}</dd>`:""}</dl></section>`;return}
   const desc=dadaFitxa(f,"descripcio"),fg=f.fotos&&f.fotos.general,fp=f.fotos&&f.fotos.placa;
   const fotos=[["Foto general",fg],["Placa de característiques",fp]].filter(([,nm])=>nm);
-  const blocs=f.pestanyes.map(p=>({p,g:pestanyaHTML(p)}));
+  /* Només es mostren els apartats 1-3 (identificació), 4 (característiques) i 6 (criticitat) */
+  const blocs=f.pestanyes.filter(p=>/^(1-3|4|6)\b/.test(p.nom.trim())).map(p=>({p,g:pestanyaHTML(p)}));
   $v.innerHTML=`
    <section class="hero">
      <p class="eyebrow" style="margin:0">Fitxa ${f.fitxa?String(f.fitxa).padStart(2,"0")+" · ":""}actualitzada ${esc(f.actualitzada||"")}</p>
@@ -342,15 +389,17 @@ function fitxa(n){
      ${fotos.length?`<div class="fotos">${fotos.map(([t,nm])=>{const u=fotoUrl(nm);return u?`<figure><img src="${esc(u)}" alt="${t}" loading="lazy"><figcaption>${t}</figcaption></figure>`:`<figure class="nofoto"><span>${esc(nm)}</span><figcaption>${t} · es veurà quan es carregui del Drive</figcaption></figure>`}).join("")}</div>`:""}
    </section>
    ${blocs.map(({p,g},i)=>{const n2=g.reduce((s,x)=>s+x.n,0);
-     return `<details class="sec" ${i===0?"open":""} ${g.length?"":"data-buit"}><summary><span class="n">${esc((p.nom.match(/^[\dA-Za-z-]+/)||[""])[0].replace(/^Annex$/,"A"))}</span>${esc(p.titol.replace(/^\d+\.\s*/,""))}<span class="st">${g.length?(n2?n2+" dades":"Pendent"):"Pendent"}</span></summary>
-       ${g.length?g.map(x=>`${x.titol?`<h4>${esc(x.titol)}</h4>`:""}${x.parts.join("")}`).join(""):`<p class="buit">Encara sense dades.</p>`}
+     return `<details class="sec" ${i===0?"open":""} ${g.length?"":"data-buit"}><summary><span class="n">${i+1}</span>${esc(p.titol.replace(/^\d+\.\s*/,""))}<span class="st">${g.length?(n2?n2+" dades":"Pendent"):"Pendent"}</span></summary>
+       ${g.length?g.map(x=>`${x.titol?`<h4>${esc(x.titol.replace(/^\d+\.\s*/,""))}</h4>`:""}${x.parts.join("")}`).join(""):`<p class="buit">Encara sense dades.</p>`}
      </details>`}).join("")}`;
 }
 
+const PROX={"Tasques programades":"Aquí hi haurà les tasques que s'han de fer a la màquina, ordenades per data. De cada tasca s'anotarà qui l'ha feta i el temps invertit, per tenir-ne un registre. Si el registre no està al dia, la màquina sortirà en groc."};
 function proximament({m,t}){
   const mq=MAQ.find(x=>x.n===m);
   setHead(t,mq.nom,true);
-  $v.innerHTML=`<div class="empty-state">${ICON.fitxa}<h3>${esc(t)}</h3><p>Aquest apartat es connectarà més endavant. De moment, la prioritat és la fitxa de l'equip.</p></div>`;
+  const txt=PROX[t]||"Aquest apartat es connectarà més endavant. De moment, la prioritat és la fitxa de l'equip.";
+  $v.innerHTML=`<div class="empty-state">${PROX[t]?ICON.tasq:ICON.fitxa}<h3>${esc(t)}</h3><p>${txt}</p><span class="tag old">Pendent de fer</span></div>`;
 }
 function manteniment(){setHead("Manteniment","Tot el taller",false);
   $v.innerHTML=`<div class="empty-state">${ICON.mant}<h3>Cap tasca pendent</h3><p>Aquí sortiran les tasques de manteniment pendents de totes les màquines, quan es carregui el pla de manteniment.</p></div>`}

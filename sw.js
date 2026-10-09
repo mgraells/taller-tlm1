@@ -1,5 +1,5 @@
 // Permet instal·lar l'app i obrir-la sense connexió. Les dades del Drive les gestiona l'app.
-const CACHE="taller-tlm1-v2";
+const CACHE="taller-tlm1-v5";
 const FITXERS=["./","index.html","manifest.json","icon-192.png","icon-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FITXERS)));self.skipWaiting()});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
